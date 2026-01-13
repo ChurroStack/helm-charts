@@ -40,7 +40,7 @@ spec:
               value: "30"
             - name: AUTOSSH_FIRST_POLL
               value: "30"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           volumeMounts:
             - name: ssh-key
               mountPath: /home/tunnel/.ssh/keys/id_ed25519
@@ -90,7 +90,7 @@ spec:
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
       volumes:
         - name: ssh-key
           secret:
