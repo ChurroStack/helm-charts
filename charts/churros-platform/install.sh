@@ -1,0 +1,1 @@
+helm upgrade --install churros-platform . -f values.local.yaml -n churrostack --create-namespace $1

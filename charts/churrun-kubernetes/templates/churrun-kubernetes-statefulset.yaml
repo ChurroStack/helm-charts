@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: churrun-kubernetes
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: churrun-kubernetes
+  template:
+    metadata:
+      labels:
+        app: churrun-kubernetes
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: churrun-kubernetes-tunnel
+          image: '{{ .Values.images.tunnel }}'
+          ports: []
+          env:
+            - name: SSH_HOST
+              value: "{{ .Values.tunnel.host }}"
+            - name: SSH_PORT
+              value: "{{ .Values.tunnel.port }}"
+            - name: SSH_USER
+              value: "{{ .Values.tunnel.user }}"
+            - name: REMOTE_PORT
+              value: "{{ .Values.tunnel.tunnel_port }}"
+            - name: LOCAL_HOST
+              value: "localhost"
+            - name: LOCAL_PORT
+              value: "8080"
+            - name: AUTOSSH_GATETIME
+              value: "0"
+            - name: AUTOSSH_POLL
+              value: "30"
+            - name: AUTOSSH_FIRST_POLL
+              value: "30"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: ssh-key
+              mountPath: /home/tunnel/.ssh/keys/id_ed25519
+              subPath: id_ed25519
+              readOnly: true
+            - name: known-hosts
+              mountPath: /home/tunnel/.ssh/known_hosts
+              subPath: known_hosts
+              readOnly: true
+          securityContext:
+            runAsUser: 10001
+            runAsGroup: 10001
+            fsGroup: 10001
+        - name: churrun-kubernetes
+          image: '{{ .Values.images.churrun }}'
+          ports: []
+          env:
+            - name: ConnectionStrings__Database
+              value: "Data Source=/app/data/churrun.db"
+            - name: Name
+              value: "{{ .Values.churrun.name }}"
+            - name: EncryptionKey
+              valueFrom:
+                secretKeyRef:
+                  name: churrun-kubernetes-secrets
+                  key: ENCRYPTION_KEY
+            - name: Kubernetes__Namespace
+              value: "{{ .Release.Namespace }}"
+            - name: Kubernetes__ServiceMesh
+              value: "{{ .Values.kubernetes.service_mesh }}"
+            - name: Kubernetes__Connection__Host
+              value: "{{ .Values.kubernetes.connection.host }}"
+            - name: Kubernetes__Connection__ClientCertificate
+              valueFrom:
+                secretKeyRef:
+                  name: churrun-kubernetes-secrets
+                  key: Kubernetes__Connection__ClientCertificate
+            - name: Kubernetes__Connection__ClientKey
+              valueFrom:
+                secretKeyRef:
+                  name: churrun-kubernetes-secrets
+                  key: Kubernetes__Connection__ClientKey
+          volumeMounts:
+            - name: db-data
+              mountPath: /app/data
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+          imagePullPolicy: IfNotPresent
+      volumes:
+        - name: ssh-key
+          secret:
+            secretName: churrun-kubernetes-secrets
+            items:
+              - key: id_ed25519
+                path: id_ed25519
+        - name: known-hosts
+          secret:
+            secretName: churrun-kubernetes-secrets
+            items:
+              - key: known_hosts
+                path: known_hosts
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: churrun-kubernetes-db
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: churrun-kubernetes
+  serviceName: churrun-kubernetes

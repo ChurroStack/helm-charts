@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: churros-tunnel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: churros-tunnel
+  template:
+    metadata:
+      labels:
+        app: churros-tunnel
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: churros-tunnel
+          image: '{{ .Values.images.tunnel }}'
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PGHOST
+              value: "{{ .Values.tunnel.pghost }}"
+            - name: PGPORT
+              value: "{{ .Values.tunnel.pgport }}"
+            - name: PGUSER
+              value: "{{ .Values.tunnel.pguser }}"
+            - name: PGDATABASE
+              value: "{{ .Values.tunnel.pgdatabase }}"
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: churros-tunnel-secrets
+                  key: PGPASSWORD
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: ssh-data
+              mountPath: /home/tunnel/.ssh
+        - name: churros-tunnel-proxy
+          image: '{{ .Values.images.tunnel_proxy }}'
+          ports:
+            - name: ssh
+              containerPort: 6443
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+      volumes:
+        - name: ssh-data
+          persistentVolumeClaim:
+            claimName: churros-tunnel-proxy-ssh-keys
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+  serviceName: churros-tunnel

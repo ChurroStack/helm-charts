@@ -1,0 +1,51 @@
+tunnel:
+  pghost: "churros-database"
+  pgport: "5432"
+  pguser: "churros_user"
+  pgdatabase: "churros_db"
+  pgpassword: "churros_password"
+  ssh_persistence:
+    enabled: true
+    pvc:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 32Mi
+  host:
+    public: "tunnel.churrostack.com:8443"
+    internal: "http://churros-tunnel-proxy:8080"
+
+api:
+  openiddict:
+    password: "password"
+    signing: certs/openiddict-signing.pfx
+    encryption: certs/openiddict-encryption.pfx
+  master_key: "super-secret-master-key-in-base64"
+  base_url: "https://portal.churrostack.com/"
+  owners: "user@domain.com" # Comma-separated list of owner emails
+  create_account: true
+  authentication_providers:
+    microsoft:
+      authority: "https://login.microsoftonline.com/common/v2.0"
+      authorization_endpoint: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+      token_endpoint: "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+      logout_endpoint: "https://login.microsoftonline.com/common/oauth2/v2.0/logout"
+      client_id: "your-microsoft-client-id"
+      client_secret: "your-microsoft-client-secret"
+      scope: "openid profile offline_access api://client-id/access_as_user"
+  connection_strings:
+    database: "Server=postgresql;Database=ChurrOS;Port=5432;User Id=postgres;Password=password;"
+    cache: "churros-redis-master:6379"
+  client_secret: "super-secret-client-secret"
+
+images:
+  ui: "quay.io/churrostack/churros-ui:latest"
+  api: "quay.io/churrostack/churros-api:latest"
+  tunnel: "quay.io/churrostack/churros-tunnel:latest"
+  tunnel_proxy: "quay.io/churrostack/churros-tunnel-proxy:latest"
+
+ingress:
+  nginx:
+    enabled: true
+    host: "portal.churrostack.com"

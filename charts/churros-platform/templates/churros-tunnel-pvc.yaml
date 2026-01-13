@@ -1,0 +1,8 @@
+{{- if .Values.tunnel.ssh_persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: churros-tunnel-proxy-ssh-keys
+spec:
+{{ toYaml .Values.tunnel.ssh_persistence.pvc | indent 2 }}
+{{- end }}

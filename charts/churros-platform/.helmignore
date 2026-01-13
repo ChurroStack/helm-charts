@@ -1,0 +1,47 @@
+# VCS
+.git/
+.gitignore
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CI / tooling
+.github/
+.gitlab/
+Makefile
+
+# Helm / Kubernetes
+charts/
+*.tgz
+*.lock
+
+# Tests & docs
+test/
+tests/
+docs/
+README.md
+
+# Temporary / build artifacts
+tmp/
+temp/
+dist/
+build/
+out/
+
+# Logs
+*.log
+
+# Secrets (never package)
+*.pem
+*.key
+*.crt
+*.enc
+*.secret

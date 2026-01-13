@@ -1,0 +1,8 @@
+{{- if .Values.churrun.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: churrun-kubernetes-db
+spec:
+{{ toYaml .Values.churrun.persistence.pvc | indent 2 }}
+{{- end }}

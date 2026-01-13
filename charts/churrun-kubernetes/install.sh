@@ -1,0 +1,1 @@
+helm upgrade --install churrun . -f values.local.yaml -n churrun --create-namespace $1

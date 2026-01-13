@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: churros-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: churros-api
+  template:
+    metadata:
+      labels:
+        app: churros-api
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: churros-ui
+          image: '{{ .Values.images.ui }}'
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: VITE_OIDC_ISSUER_URI
+              value: "{{ .Values.api.base_url }}"
+        - name: churros-api
+          image: '{{ .Values.images.api }}'
+          ports: []
+          env:
+            - name: OPENIDDICT_ENCRYPTION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: churros-api-secrets
+                  key: OPENIDDICT_CERT_PASSWORD
+            - name: OPENIDDICT_SIGNING_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: churros-api-secrets
+                  key: OPENIDDICT_CERT_PASSWORD
+            - name: MasterKey
+              value: "{{ .Values.api.master_key }}"
+            - name: Owners
+              value: "{{ .Values.api.owners }}"
+            - name: ClientSecret
+              value: "{{ .Values.api.client_secret }}"
+            - name: CreateAccount
+              value: "{{ .Values.api.create_account }}"
+            - name: BaseUrl
+              value: "{{ .Values.api.base_url }}"
+            - name: Tunnel__Host__Public
+              value: "{{ .Values.tunnel.host.public }}"
+            - name: Tunnel__Host__Internal
+              value: "{{ .Values.tunnel.host.internal }}"
+            - name: Tunnel__PgsqlPassword
+              valueFrom:
+                secretKeyRef:
+                  name: churros-api-secrets
+                  key: PGPASSWORD
+            - name: ConnectionStrings__Database
+              valueFrom:
+                secretKeyRef:
+                  name: churros-api-secrets
+                  key: DatabaseConnectionString
+            - name: ConnectionStrings__Cache
+              valueFrom:
+                secretKeyRef:
+                  name: churros-api-secrets
+                  key: CacheConnectionString            
+            - name: ExternalProviders__Microsoft__Authority
+              value: "{{ .Values.api.authentication_providers.microsoft.authority }}"
+            - name: ExternalProviders__Microsoft__AuthorizationEndpoint
+              value: "{{ .Values.api.authentication_providers.microsoft.authorization_endpoint }}"
+            - name: ExternalProviders__Microsoft__TokenEndpoint
+              value: "{{ .Values.api.authentication_providers.microsoft.token_endpoint }}"
+            - name: ExternalProviders__Microsoft__LogoutEndpoint
+              value: "{{ .Values.api.authentication_providers.microsoft.logout_endpoint }}"
+            - name: ExternalProviders__Microsoft__ClientId
+              value: "{{ .Values.api.authentication_providers.microsoft.client_id }}"
+            - name: ExternalProviders__Microsoft__Scope
+              value: "{{ .Values.api.authentication_providers.microsoft.scope }}"
+            - name: ExternalProviders__Microsoft__ClientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: churros-api-secrets
+                  key: MicrosoftClientSecret
+          volumeMounts:
+            - name: certs
+              mountPath: /app/certs
+              readOnly: true
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000      
+      volumes:        
+      - name: certs
+        secret:
+          secretName: churros-api-secrets
+          items:
+            - key: signing.pfx
+              path: signing.pfx
+            - key: encryption.pfx
+              path: encryption.pfx
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+  serviceName: churros-api

@@ -1,0 +1,40 @@
+churrun:
+  name: "dev"
+  encryption_key: "changemepleasechangemeplease"
+  persistence:
+    enabled: true
+    pvc:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+
+kubernetes:
+  service_mesh: "istio"
+  connection:
+    host: "https://kubernetes.default.svc"
+    client_certificate: "LS0t..."
+    client_key: "LS0t..."
+
+tunnel:
+  host: "tunnel.churrostack.com"
+  port: 8443
+  user: "tunnel"
+  tunnel_port: 13442
+  id_ed25519: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQyNTUx
+    OQAAACAYfe+CFbQXIGmLrr09Sw91QEvvE++04C19mn5iMHC5YgAAAIjqPsE66j7BOgAAAAtzc2gt
+    ZWQyNTUxOQAAACAYfe+CFbQXIGmLrr09Sw91QEvvE++04C19mn5iMHC5YgAAAEC4EIv8+JFQlqI4
+    gqejiF20Dqb7+icFPoNKuyEWBJ6eWBh974IVtBcgaYuuvT1LD3VAS+8T77TgLX2afmIwcLliAAAA
+    AAECAwQF
+    -----END OPENSSH PRIVATE KEY-----
+  known_hosts: |
+    192.168.139.2 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPImXB8gS8Fa4KR3ElAY0NsBOlLbKLC9DdvT0eblgI00
+  
+images:
+    churrun: "quay.io/churrostack/churrun-kubernetes:latest"
+    tunnel: "quay.io/churrostack/churrun-tunnel:latest"
+
+
