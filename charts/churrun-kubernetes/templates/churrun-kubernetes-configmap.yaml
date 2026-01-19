@@ -4,5 +4,5 @@ metadata:
   name: churrun-kubernetes-sizes
 data:
   sizes.yaml: |
-  sizes:
+    sizes:
 {{ toYaml .Values.churrun.sizes | nindent 4 }}
