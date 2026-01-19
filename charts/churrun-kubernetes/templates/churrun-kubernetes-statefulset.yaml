@@ -69,7 +69,11 @@ spec:
             - name: Kubernetes__Namespace
               value: "{{ .Release.Namespace }}"
             - name: Kubernetes__ServiceMesh
-              value: "{{ .Values.kubernetes.service_mesh }}"
+              value: "{{ .Values.kubernetes.service_mesh }}"            
+            - name: Kubernetes__StorageClass
+              value: "{{ .Values.kubernetes.storage_class }}"
+            - name: Kubernetes__SharedStorageClass
+              value: "{{ .Values.kubernetes.shared_storage_class }}"
             - name: Kubernetes__Connection__Host
               value: "{{ .Values.kubernetes.connection.host }}"
             - name: Kubernetes__Connection__ClientCertificate

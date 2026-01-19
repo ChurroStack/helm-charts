@@ -29,6 +29,8 @@ churrun:
 
 kubernetes:
   service_mesh: "istio"
+  storage_class: ""
+  shared_storage_class: ""
   connection:
     host: "https://kubernetes.default.svc"
     client_certificate: "LS0t..."
