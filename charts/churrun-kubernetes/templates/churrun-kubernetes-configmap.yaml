@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: churrun-kubernetes-sizes
+data:
+  sizes.yaml: |
+{{ toYaml .Values.churrun.sizes | nindent 4 }}

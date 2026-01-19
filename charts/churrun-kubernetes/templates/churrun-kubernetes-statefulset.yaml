@@ -83,13 +83,22 @@ spec:
                   name: churrun-kubernetes-secrets
                   key: Kubernetes__Connection__ClientKey
           volumeMounts:
+            - name: sizes
+              mountPath: /app/sizes.yaml
+              subPath: sizes.yaml
             - name: db-data
               mountPath: /app/data
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
           imagePullPolicy: Always
-      volumes:
+      volumes:        
+        - name: sizes
+          configMap:
+            name: churrun-kubernetes-sizes
+            items:
+              - key: sizes.yaml
+                path: sizes.yaml
         - name: ssh-key
           secret:
             secretName: churrun-kubernetes-secrets

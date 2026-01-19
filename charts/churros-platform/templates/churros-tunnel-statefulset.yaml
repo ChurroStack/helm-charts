@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
             - name: ssh-data
-              mountPath: /home/tunnel/.ssh
+              mountPath: /etc/ssh
         - name: churros-tunnel-proxy
           image: '{{ .Values.images.tunnel_proxy }}'
           ports:
