@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   churros-platform:
   - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2026-01-19T10:19:58.92084237Z"
+    description: A Helm chart for the Churros platform components
+    digest: 66936c466b5f902984d65bebb9f7eefadc7c22f39a0106e7136c5094ee48baf5
+    name: churros-platform
+    type: application
+    urls:
+    - https://github.com/ChurroStack/helm-charts/releases/download/churros-platform-0.1.1/churros-platform-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2026-01-13T13:27:58.78785854Z"
     description: A Helm chart for the Churros platform components
@@ -13,6 +23,16 @@ entries:
     version: 0.1.0
   churrun-kubernetes:
   - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2026-01-19T10:19:59.137787679Z"
+    description: A Helm chart for the Churrun Kubernetes runner
+    digest: 89beb612c58dd6bcff955f6034f9b837d14a891a3ff749673d4543b70fe808ae
+    name: churrun-kubernetes
+    type: application
+    urls:
+    - https://github.com/ChurroStack/helm-charts/releases/download/churrun-kubernetes-0.1.1/churrun-kubernetes-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2026-01-13T13:27:59.080330758Z"
     description: A Helm chart for the Churrun Kubernetes runner
@@ -22,4 +42,4 @@ entries:
     urls:
     - https://github.com/ChurroStack/helm-charts/releases/download/churrun-kubernetes-0.1.0/churrun-kubernetes-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-13T13:27:59.080335425Z"
+generated: "2026-01-19T10:19:59.137799791Z"
