@@ -31,6 +31,11 @@ kubernetes:
   service_mesh: "istio"
   storage_class: ""
   shared_storage_class: ""
+  limits:
+    cpu: "32"
+    memory: "64Gi"
+    storage: "1Ti"
+    gpu: ""    
   connection:
     host: "https://kubernetes.default.svc"
     client_certificate: "LS0t..."

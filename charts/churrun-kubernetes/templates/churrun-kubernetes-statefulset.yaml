@@ -57,6 +57,14 @@ spec:
           image: '{{ .Values.images.churrun }}'
           ports: []
           env:
+            - name: Kubernetes__Limits__Cpu:
+              value: "{{ .Values.kubernetes.limits.cpu }}"
+            - name: Kubernetes__Limits__Memory:
+              value: "{{ .Values.kubernetes.limits.memory }}"
+            - name: Kubernetes__Limits__Storage:
+              value: "{{ .Values.kubernetes.limits.storage }}"
+            - name: Kubernetes__Limits__Gpu:
+              value: "{{ .Values.kubernetes.limits.gpu }}"
             - name: ConnectionStrings__Database
               value: "Data Source=/app/data/churrun.db"
             - name: Name
