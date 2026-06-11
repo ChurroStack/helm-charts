@@ -24,6 +24,16 @@ entries:
   churrun-kubernetes:
   - apiVersion: v2
     appVersion: 1.0.6
+    created: "2026-06-11T19:44:31.280628107Z"
+    description: A Helm chart for the Churrun Kubernetes runner
+    digest: 57aa6e0c6dbcfcd2a34f00f1c66275f613f7afe22c85150150f1c9775dbea493
+    name: churrun-kubernetes
+    type: application
+    urls:
+    - https://github.com/ChurroStack/helm-charts/releases/download/churrun-kubernetes-0.1.7/churrun-kubernetes-0.1.7.tgz
+    version: 0.1.7
+  - apiVersion: v2
+    appVersion: 1.0.6
     created: "2026-01-24T12:36:00.206174851Z"
     description: A Helm chart for the Churrun Kubernetes runner
     digest: 428c14ee9e1a4f830bac3d834e138d44e8ed575ea499520f5746fb1fe3cc7bc8
@@ -92,4 +102,4 @@ entries:
     urls:
     - https://github.com/ChurroStack/helm-charts/releases/download/churrun-kubernetes-0.1.0/churrun-kubernetes-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-24T12:36:00.206208594Z"
+generated: "2026-06-11T19:44:31.280666891Z"
